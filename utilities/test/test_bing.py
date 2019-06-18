@@ -22,8 +22,8 @@ class ImageFetcherTest(unittest.TestCase):
             self.imageFetcher.saveImage("data", "test_image")
         )
         self.assertEqual(
-            "Successfully Cropped",
-            self.imageFetcher.cropImage(32)
+            "CropSuccess",
+            self.imageFetcher.cropImage(32)[0]
         )
 
     def tearDown(self):
