@@ -132,21 +132,21 @@ class ImageFetcher:
     def _cropImage(self, pixels, **kwargs):
         try:
             if self._checkPathValidity(**kwargs):
-                image = Image.open(self.fileAddress)
+                image = Image.open(self.image.raw)
                 imageWidth, imageHeight = image.size
                 image.crop(
                     (pixels, pixels, imageWidth-pixels, imageHeight-pixels)
-                ).save(self.fileAddress)
+                )
                 print("Image Cropped Successfully to size {}X{}.".format(
                     imageHeight-2*pixels, imageWidth-2*pixels
                 ))
-                return "Successfully Cropped"
+                return "CropSuccess", image
             else:
                 print("An error occured while cropping the Image.")
-                return "CropError"
+                return "CropError", Image.new("RGB",(512,512))
         except Exception:
             print("An error occured while cropping the Image.")
-            return "CropError"
+            return "CropError", Image.new("RGB",(512,512))
 
     def _checkPathValidity(self, **kwargs):
         if kwargs == {}:
