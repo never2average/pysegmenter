@@ -24,7 +24,8 @@ class GeoEncoder:
             return self.callback(response)
         else:
             latlongList = response[0]["boundingbox"]
-            return [
+            latlongList = [float(i) for i in latlongList]
+            return (
                 latlongList[1], latlongList[2],
                 latlongList[0], latlongList[3]
-            ]
+            )
