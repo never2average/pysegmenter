@@ -14,6 +14,9 @@ class ImageFetcher:
         self.fetchedImage = False
         self.fileSaved = False
         self. validationError = self._validate_inputs(**kwargs)
+        self.debug = False
+        if args == []:
+            self.debug = args[0]
 
     def _validate_inputs(self, **kwargs):
         if len(kwargs.keys()) in [5, 6, 7]:
@@ -21,13 +24,17 @@ class ImageFetcher:
                 if "latitude" in kwargs:
                     self.latitude = kwargs["latitude"]
                 else:
-                    print("Key Error: The arguement latitude is required")
+                    self.pprint(
+                        "Key Error: The arguement latitude is required"
+                    )
                     return True
 
                 if "longitude" in kwargs:
                     self.longitude = kwargs["longitude"]
                 else:
-                    print("Key Error: The arguement longitude is required")
+                    self.pprint(
+                        "Key Error: The arguement longitude is required"
+                    )
                     return True
             else:
                 self.latitude = kwargs["point"].y
@@ -36,7 +43,9 @@ class ImageFetcher:
             if "length" in kwargs:
                 self.length = kwargs["length"]
             else:
-                print("Key Error: The arguement length is a required value")
+                self.pprint(
+                    "Key Error: The arguement length is a required value"
+                )
                 return True
 
             if "breadth" in kwargs:
@@ -47,12 +56,12 @@ class ImageFetcher:
             if "source" in kwargs:
                 self.source = kwargs["source"]
                 if not kwargs["source"] in baseURLs:
-                    print(
+                    self.pprint(
                         "Source Error: Unknown source {}.".format(
                             kwargs["source"]
                         )
                     )
-                    print(
+                    self.pprint(
                         "Available Options are: {}.".format(
                             ','.join(baseURLs.keys())
                         )
@@ -61,26 +70,32 @@ class ImageFetcher:
                 else:
                     self.sourceStr = baseURLs[kwargs["source"]]
             else:
-                print("Key Error: The arguement source is a required value")
+                self.pprint(
+                    "Key Error: The arguement source is a required value"
+                )
                 return True
 
             if "API_Key" in kwargs:
                 self.apikey = kwargs["API_Key"]
             else:
-                print("Key Error: The arguement API Key is a required value")
+                self.pprint(
+                    "Key Error: The arguement API Key is a required value"
+                )
                 return True
 
             if "imageType" in kwargs:
                 self.imageType = kwargs["imageType"]
             else:
-                print("Key Error: The arguement imageType is a required value")
+                self.pprint(
+                    "Key Error: The arguement imageType is a required value"
+                )
                 return True
             return False
         else:
-            print(
+            self.pprint(
                 "Variable Error: The class requires 6 arguements."
             )
-            print(
+            self.pprint(
                 "You gave {} arguements".format(len(kwargs.keys()))
             )
             return False
@@ -101,9 +116,9 @@ class ImageFetcher:
             if self.image.status_code == 200:
                 self.image.raw.decode_content = True
                 self.fetchedImage = True
-                print("Image Fetched Successfully")
+                self.pprint("Image Fetched Successfully")
             else:
-                print("Image Fetching Failed")
+                self.pprint("Image Fetching Failed")
             return self.image.status_code
 
     def saveImage(self, dir, filename):
@@ -115,18 +130,18 @@ class ImageFetcher:
             try:
                 os.makedirs(dir)
             except Exception:
-                print("Failed to make directory.")
-                print("Make sure you have appropriate user privileges.")
+                self.pprint("Failed to make directory.")
+                self.pprint("Make sure you have appropriate user privileges.")
                 return "Error"
         try:
             self.fileAddress = dir+"/"+filename+"."+self.imageType
             with open(self.fileAddress, 'wb') as fobj:
                 shutil.copyfileobj(self.image.raw, fobj)
             self.fileSaved = True
-            print("Image Saved Sucessfully")
+            self.pprint("Image Saved Sucessfully")
             return "Success"
         except Exception:
-            print("Error Occured While Saving Image")
+            self.pprint("Error Occured While Saving Image")
             return "Error"
 
     def cropImage(self, pixels):
@@ -141,15 +156,15 @@ class ImageFetcher:
                 image = image.crop(
                     (pixels, pixels, imageWidth-pixels, imageHeight-pixels)
                 )
-                print("Image Cropped Successfully to size {}X{}.".format(
+                self.pprint("Image Cropped Successfully to size {}X{}.".format(
                     imageHeight-2*pixels, imageWidth-2*pixels
                 ))
                 return "CropSuccess", image
             else:
-                print("An error occured while cropping the Image.")
+                self.pprint("An error occured while cropping the Image.")
                 return "CropError", Image.new("RGB", (512, 512))
         except Exception:
-            print("An error occured while cropping the Image.")
+            self.pprint("An error occured while cropping the Image.")
             return "CropError", Image.new("RGB", (512, 512))
 
     def _checkPathValidity(self, **kwargs):
@@ -158,7 +173,9 @@ class ImageFetcher:
         else:
             if "dir" in kwargs:
                 if not os.path.isdir(kwargs["dir"]):
-                    print("The directory provided by you does not exist.")
+                    self.pprint(
+                        "The directory provided by you does not exist."
+                    )
                     return False
                 else:
                     if "filename" in kwargs:
@@ -167,7 +184,11 @@ class ImageFetcher:
                         self.fileAddress += "."+self.imageType
                         return True
                     else:
-                        print("filename is a required attribute.")
+                        self.pprint("filename is a required attribute.")
                         return False
             else:
-                print("dir is a required attribute.")
+                self.pprint("dir is a required attribute.")
+
+    def pprint(self, text):
+        if self.debug:
+            print(text)

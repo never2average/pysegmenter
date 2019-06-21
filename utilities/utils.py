@@ -1,5 +1,4 @@
 import math
-import numpy
 
 
 class Point:
@@ -23,7 +22,8 @@ class Point:
 def LonLatToMeters(lonlat_point):
     origin_shift = 2 * math.pi * 6378137 / 2.0
     metre_x = lonlat_point.x * origin_shift / 180.0
-    metre_y = math.log(math.tan((90 + lonlat_point.y) * math.pi / 360.0)) / (math.pi / 180.0)
+    metre_y = math.log(math.tan((90 + lonlat_point.y) * math.pi / 360.0))
+    metre_y /= (math.pi / 180.0)
     metre_y = metre_y * origin_shift / 180.0
     return Point(metre_x, metre_y)
 
