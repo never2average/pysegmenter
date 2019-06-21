@@ -66,8 +66,7 @@ def LonLatToMapboxTile(lonLat, zoom):
 def LonLatToMapbox(lonLat, zoom, originTile):
     n = 2**(zoom*1.0)
     x = (lonLat.x + 180) / 360 * n
-    y = (1 - math.log(math.tan(lonLat.y * math.pi / 180)
-    y += (1 / math.cos(lonLat.y * math.pi / 180))) / math.pi) / 2 * n
+    y = (1 - math.log(math.tan(lonLat.y * math.pi / 180) + (1 / math.cos(lonLat.y * math.pi / 180))) / math.pi) / 2 * n
     xoff = x - originTile[0]*1.0
     yoff = y - originTile[1]*1.0
     return Point(xoff, yoff)*256
