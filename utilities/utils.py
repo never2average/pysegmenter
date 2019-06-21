@@ -1,5 +1,7 @@
 import math
+from utilities.geoencoder import GeoEncoder
 
+zoom=17
 
 class Point:
     def __init__(self, x, y):
@@ -18,13 +20,15 @@ class Point:
     def __mul__(self, scale):
         return Point(self.x * scale, self.y * scale)
 		
+
 		
 class region:
     def __init__(self, name):
         self.name = name
         self.get_bbox()
         self.get_center_gps()
-        self.get_radii()        
+        self.get_radii()
+                
         
     def get_bbox(self):
         testobj=GeoEncoder()

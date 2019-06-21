@@ -1,6 +1,5 @@
 import requests
 
-
 class GeoEncoder:
     def __init__(self, **kwargs):
         self.baseURL = "https://nominatim.openstreetmap.org/?q={}&format={}&limit=1"
