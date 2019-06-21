@@ -5,7 +5,9 @@ import os
 import re
 import math
 
-def getimage(regionName, api_key, format = "jpeg", path = None):
+
+def getimage(regionName, api_key, format = "jpeg", path = None,debug = False):
+
 	if format not in ["jpeg","png"]:
 		print("Unknown format provided!! please enter either png or jpeg")
 		return
@@ -22,12 +24,14 @@ def getimage(regionName, api_key, format = "jpeg", path = None):
 		
 	zoom = 17
 	width = 2* math.pi * 6378137 / 2 ** (zoom) / 256
+
 	
-	reg=region(regionName)
+	reg=Region(regionName)
 	
+
 	requiredtiles=[]
 	count=1	
-	
+
 	for i in range(-1*reg.radiusx,reg.radiusx):
 		for j in range(-1*reg.radiusy,reg.radiusy):
 			reg_name="Bengaluru,Karntaka ,India".strip()
@@ -37,9 +41,9 @@ def getimage(regionName, api_key, format = "jpeg", path = None):
 			reg_first_name=reg_names[0].strip()
 			fname=str(reg_first_name)+"_"+str(count)+"."+str(format)
 			count+=1
-			requiredtiles.append(tile(reg,i,j,fname))
+			requiredtiles.append(Tile(reg,i,j,fname))
 			
-	
+
 	for tiles in requiredtiles:
 		new_im = Image.new('RGB', (4096,4096))
 		for xoffset in range(0,4096,512):
@@ -47,7 +51,7 @@ def getimage(regionName, api_key, format = "jpeg", path = None):
 				centerWorld = tiles.reg.centerWorld + (Point(tiles.x*4096.0 + xoffset , -1 * (tiles.y * 4096.0 + yoffset)) * width)
 				centerGPS = MetersToLonLat(centerWorld)
 				imagefetcher=ImageFetcher(
-					True,
+					debug,
 					point=centerGPS,
 					length=576,
 					imageType=format,
@@ -57,3 +61,4 @@ def getimage(regionName, api_key, format = "jpeg", path = None):
 				_,im=imagefetcher.cropImage(32)
 				new_im.paste(im,(xoffset,yoffset))
 		new_im.save(os.path.join(image_path,tiles.fname))
+
