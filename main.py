@@ -1,10 +1,10 @@
 from utilities.bing import ImageFetcher
-from utilities.geoencoder import GeoEncoder
 from utilities.utils import *
 import os
 import re
 
-def getimage(regionname,format,api_key,path=r"./data/images"):
+
+def getimage(regionname, format, api_key, path=r"./data/images"):
 	if format not in ["jpeg","png"]:
 		print("Unknown format provided!! please enter either png or jpeg")
 		return
@@ -14,12 +14,12 @@ def getimage(regionname,format,api_key,path=r"./data/images"):
 		
 	zoom = 17
 	width = 2* math.pi * 6378137 / 2 ** (zoom) / 256
-	
+
 	reg=region(regionname)
-	
+
 	requiredtiles=[]
 	count=1	
-	
+
 	for i in range(-1*reg.radiusx,reg.radiusx):
 		for j in range(-1*reg.radiusy,reg.radiusy):
 			reg_name=reg.name.strip()
@@ -29,7 +29,7 @@ def getimage(regionname,format,api_key,path=r"./data/images"):
 			count+=1
 			requiredtiles.append(tile(reg,i,j,fname))
 			
-	
+
 	for tiles in requiredtiles:
 		new_im = Image.new('RGB', (4096,4096))
 		for xoffset in range(0,4096,512):
@@ -43,6 +43,6 @@ def getimage(regionname,format,api_key,path=r"./data/images"):
 					source="bing",
 					API_Key=api_key)
 				imagefetcher.fetchImage()
-				_,im=imagefetcher.cropImage(32)
-				new_im.paste(im,(xoffset,yoffset))
+				_, im = imagefetcher.cropImage(32)
+				new_im.paste(im, (xoffset, yoffset))
 		new_im.save(path+"/"+str(tiles.fname))

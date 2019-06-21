@@ -1,4 +1,8 @@
 import math
+from utilities.geoencoder import GeoEncoder
+
+
+zoom = 17
 
 
 class Point:
@@ -17,41 +21,41 @@ class Point:
 
     def __mul__(self, scale):
         return Point(self.x * scale, self.y * scale)
-		
-		
+
+
 class region:
     def __init__(self, name):
         self.name = name
         self.get_bbox()
         self.get_center_gps()
-        self.get_radii()        
-        
+        self.get_radii()
+
     def get_bbox(self):
-        testobj=GeoEncoder()
-        self.bbox=testobj.fetchBoundingBox(self.name)
-    
+        testobj = GeoEncoder()
+        self.bbox = testobj.fetchBoundingBox(self.name)
+
     def get_center_gps(self):
         center_x = (self.bbox[1] + self.bbox[3]) / 2.0
         center_y = (self.bbox[0] + self.bbox[2]) / 2.0
         self.centerGPS = Point(center_x, center_y)
         self.centerWorld = LonLatToMeters(self.centerGPS)
-        
+
     def get_radii(self):
         extreme = LonLatToPixel(Point(self.bbox[1], self.bbox[0]), self.centerGPS, zoom)
         self.radiusx = int(math.ceil(abs(extreme.x) / 4096))
         self.radiusy = int(math.ceil(abs(extreme.y) / 4096))
 
-		
-class tile:    
+
+class tile:
     def __init__(self, region, x, y, fname):
         self.reg = region
         self.x = x
         self.y = y
         self.fname = fname
-        
+
     def __str__(self):
         return self.reg.name+" "+str(self.x)+" "+str(self.y)+" "+self.fname
-		
+
 
 def LonLatToMeters(lonlat_point):
     origin_shift = 2 * math.pi * 6378137 / 2.0

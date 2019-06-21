@@ -15,7 +15,7 @@ class ImageFetcher:
         self.fileSaved = False
         self. validationError = self._validate_inputs(**kwargs)
         self.debug = False
-        if args == []:
+        if args != []:
             self.debug = args[0]
 
     def _validate_inputs(self, **kwargs):
