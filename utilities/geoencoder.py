@@ -1,10 +1,10 @@
 import requests
 
-baseURL = "https://nominatim.openstreetmap.org/?q={}&format={}&limit=1"
-
 
 class GeoEncoder:
     def __init__(self, **kwargs):
+        self.baseURL = "https://nominatim.openstreetmap.org/?q={}&format={}&limit=1"
+        self.default = True
         if kwargs != {}:
             try:
                 self.format = kwargs["format"]
@@ -19,13 +19,25 @@ class GeoEncoder:
             self.callback = None
 
     def fetchBoundingBox(self, address):
-        response = requests.get(baseURL.format(address, self.format)).json()
-        if self.callback is not None:
-            return self.callback(response)
+        if self.default:
+            response = requests.get(
+                self.baseURL.format(address, self.format)
+            ).json()
+            if self.callback is not None:
+                return self.callback(response)
+            else:
+                latlongList = response[0]["boundingbox"]
+                latlongList = [float(i) for i in latlongList]
+                return (
+                    latlongList[1], latlongList[2],
+                    latlongList[0], latlongList[3]
+                )
         else:
-            latlongList = response[0]["boundingbox"]
-            latlongList = [float(i) for i in latlongList]
-            return (
-                latlongList[1], latlongList[2],
-                latlongList[0], latlongList[3]
-            )
+            response = requests.get(self.baseURL)
+            return self.callback(response)
+
+    def customParams(self, url, callbackFn):
+        if url is not None and callbackFn is not None:
+            self.default = False
+            self.baseURL = True
+            self.callback = callbackFn

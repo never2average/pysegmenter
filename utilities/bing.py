@@ -16,18 +16,22 @@ class ImageFetcher:
         self. validationError = self._validate_inputs(**kwargs)
 
     def _validate_inputs(self, **kwargs):
-        if len(kwargs.keys()) == 6 or len(kwargs.keys()) == 7:
-            if "latitude" in kwargs:
-                self.latitude = kwargs["latitude"]
-            else:
-                print("Key Error: The arguement latitude is a required value")
-                return True
+        if len(kwargs.keys()) in [5, 6, 7]:
+            if "point" not in kwargs:
+                if "latitude" in kwargs:
+                    self.latitude = kwargs["latitude"]
+                else:
+                    print("Key Error: The arguement latitude is required")
+                    return True
 
-            if "longitude" in kwargs:
-                self.longitude = kwargs["longitude"]
+                if "longitude" in kwargs:
+                    self.longitude = kwargs["longitude"]
+                else:
+                    print("Key Error: The arguement longitude is required")
+                    return True
             else:
-                print("Key Error: The arguement longitude is a required value")
-                return True
+                self.latitude = kwargs["point"].y
+                self.longitude = kwargs["point"].x
 
             if "length" in kwargs:
                 self.length = kwargs["length"]
