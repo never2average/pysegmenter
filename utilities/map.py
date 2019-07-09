@@ -15,13 +15,11 @@ class ImageFetcher:
         self.zoom = 17
         self.fetchedImage = False
         self.fileSaved = False
-        self. validationError = self._validate_inputs(**kwargs)
+        self.validationError = self._validate_inputs(**kwargs)
         self.debug = False
-        if args != []:
-            self.debug = args[0]
 
     def _validate_inputs(self, **kwargs):
-        if len(kwargs.keys()) in [5, 6, 7]:
+        if len(kwargs.keys()) in [5, 6, 7, 8]:
             if "point" not in kwargs:
                 if "latitude" in kwargs:
                     self.latitude = kwargs["latitude"]
@@ -92,6 +90,11 @@ class ImageFetcher:
                     "Key Error: The arguement imageType is a required value"
                 )
                 return True
+            if "debug" in kwargs:
+                self.debug = kwargs["debug"]
+            else:
+                self.debug = False
+                return True
             return False
         else:
             self.pprint(
@@ -121,7 +124,7 @@ class ImageFetcher:
                 self.pprint("Image Fetched Successfully")
             else:
                 self.pprint("Image Fetching Failed")
-            return self.image.status_code
+            return self.image.status_cofetchedde
 
     def saveImage(self, dir, filename):
         if not self.validationError:
@@ -149,6 +152,7 @@ class ImageFetcher:
     def cropImage(self, pixels):
         if self.fetchedImage:
             return self._cropImage(pixels)
+        else: print("error 1")
 
     def _cropImage(self, pixels, **kwargs):
         try:
