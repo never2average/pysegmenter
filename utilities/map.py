@@ -152,7 +152,6 @@ class ImageFetcher:
     def cropImage(self, pixels):
         if self.fetchedImage:
             return self._cropImage(pixels)
-        else: print("error 1")
 
     def _cropImage(self, pixels, **kwargs):
         try:
