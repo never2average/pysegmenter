@@ -4,8 +4,10 @@ import os
 from PIL import Image
 
 baseURLs = {
-    "bing": "https://dev.virtualearth.net/REST/V1/Imagery/Map/Aerial/{}%2C{}/{}?mapSize={},{}&format={}&key={}"
-}
+    "bing": "https://dev.virtualearth.net/REST/V1/Imagery/Map/Aerial/{},{}/{}?mapSize={},{}&format={}&key={}",
+    "googleroad":"http://maps.google.com/maps/api/staticmap?sensor=false&center={},{}&zoom={}&size={}x{}&style=feature:all|element:labels|visibility:off&format={}&key={}",
+    "googlesat":"http://maps.google.com/maps/api/staticmap?maptype=satellite&sensor=false&center={},{}&zoom={}&size={}x{}&style=feature:all|element:labels|visibility:off&format={}&key={}"
+    }
 
 
 class ImageFetcher:
@@ -105,7 +107,7 @@ class ImageFetcher:
             return self._fetchImage()
 
     def _fetchImage(self):
-        if self.source == "bing":
+        if self.source in ["bing","googleroad","googlesat"]:
             self.image = requests.get(
                 self.sourceStr.format(
                     self.latitude, self.longitude, self.zoom, self.length,
