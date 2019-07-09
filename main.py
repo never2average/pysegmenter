@@ -56,7 +56,8 @@ def getimage(regionName, bing_api_key,google_api_key,source_option="bing", forma
 					length=576,
 					imageType="png",
 					source="bing" if source_option=="bing" else "googlesat",
-					API_Key=bing_api_key if source_option=="bing" else google_api_key
+					API_Key=bing_api_key if source_option=="bing" else google_api_key,
+					debug = debug
 				)
 				imagefetcher.fetchImage()
 				_,im=imagefetcher.cropImage(32)
@@ -67,7 +68,9 @@ def getimage(regionName, bing_api_key,google_api_key,source_option="bing", forma
 						length=576,
 						imageType="png",
 						source="googleroad",
-						API_Key=google_api_key)
+						API_Key=google_api_key,
+						debug = debug		
+				)
 				maskfetcher.fetchImage()
 				_,im=maskfetcher.cropImage(32)
 				new_im_mask.paste(im,(xoffset,yoffset))
