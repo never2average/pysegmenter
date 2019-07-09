@@ -2,7 +2,7 @@ import shutil
 import unittest
 import sys
 sys.path.insert(1, "..")
-from bing import ImageFetcher
+from map import ImageFetcher
 
 
 class ImageFetcherTest(unittest.TestCase):
