@@ -16,7 +16,7 @@ class ImageFetcher:
         self.fetchedImage = False
         self.fileSaved = False
         self.validationError = self._validate_inputs(**kwargs)
-        self.debug = False
+        
 
     def _validate_inputs(self, **kwargs):
         if len(kwargs.keys()) in [5, 6, 7, 8]:
@@ -103,11 +103,12 @@ class ImageFetcher:
             self.pprint(
                 "You gave {} arguements".format(len(kwargs.keys()))
             )
-            return False
+            return True
 
     def fetchImage(self):
         if not self.validationError:
             return self._fetchImage()
+        
 
     def _fetchImage(self):
         if self.source in ["bing","googleroad","googlesat"]:
@@ -152,6 +153,7 @@ class ImageFetcher:
     def cropImage(self, pixels):
         if self.fetchedImage:
             return self._cropImage(pixels)
+        else: print("error 1")
 
     def _cropImage(self, pixels, **kwargs):
         try:
