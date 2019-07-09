@@ -43,8 +43,10 @@ def getimage(regionName, bing_api_key,google_api_key,source_option="bing", forma
 			fname=str(reg_first_name)+"_"+str(count)+"."+str(format)
 			count+=1
 			requiredtiles.append(Tile(reg,i,j,fname))
-	
-	for tiles in requiredtiles[45:47]:
+
+
+	for tiles in requiredtiles:
+		new_im =  Image.new('RGB', (4096,4096))
 		new_im_mask =  Image.new('RGB', (4096,4096))
 		for xoffset in range(0,4096,512):
 			for yoffset in range(0,4096,512):
@@ -57,7 +59,7 @@ def getimage(regionName, bing_api_key,google_api_key,source_option="bing", forma
 					imageType="png",
 					source="bing" if source_option=="bing" else "googlesat",
 					API_Key=bing_api_key if source_option=="bing" else google_api_key,
-					debug = debug
+					debug=debug
 				)
 				imagefetcher.fetchImage()
 				_,im=imagefetcher.cropImage(32)
@@ -69,7 +71,7 @@ def getimage(regionName, bing_api_key,google_api_key,source_option="bing", forma
 						imageType="png",
 						source="googleroad",
 						API_Key=google_api_key,
-						debug = debug		
+						debug=debug
 				)
 				maskfetcher.fetchImage()
 				_,im=maskfetcher.cropImage(32)
