@@ -1,4 +1,4 @@
-from utilities.bing import ImageFetcher
+from utilities.map import ImageFetcher
 from utilities.utils import *
 from PIL import Image
 import os
@@ -6,16 +6,16 @@ import re
 import math
 
 
-def getimage(regionName, bing_api_key,google_api_key,source_option=bing, format = "png", path = None,debug = False):
+def getimage(regionName, bing_api_key,google_api_key,source_option="bing", format = "png", path = None,debug = False):
 
 	if format not in ["jpeg","png"]:
 		print("Unknown format provided!! please enter either png or jpeg")
 		return
-	if source_option not in ["bing","google"] :
-		
-	if path==None:
-		curr_path=os.getcwd()
-		image_path=os.path.join(curr_path,"data","images")
+	if source_option not in ["bing","google"]:
+		return
+	if path is None:
+		curr_path = os.getcwd()
+		image_path = os.path.join(curr_path, "data", "images")
 		if not os.path.isdir(image_path):
 			os.makedirs(image_path)
 	else:
@@ -43,33 +43,33 @@ def getimage(regionName, bing_api_key,google_api_key,source_option=bing, format 
 			fname=str(reg_first_name)+"_"+str(count)+"."+str(format)
 			count+=1
 			requiredtiles.append(Tile(reg,i,j,fname))
-			
-
-	for tiles in requiredtiles:
+	
+	for tiles in requiredtiles[45:47]:
 		new_im_mask =  Image.new('RGB', (4096,4096))
-    		for xoffset in range(0,4096,512):
-        		for yoffset in range(0,4096,512):
-            			centerWorld = tiles.reg.centerWorld + (Point(tiles.x*4096.0 + xoffset , -1 * (tiles.y * 4096.0 + yoffset)) * width)
-            			centerGPS = MetersToLonLat(centerWorld)
-            			imagefetcher=ImageFetcher(
-    						latitude=centerGPS.y,
-                				longitude=centerGPS.x,
-                				length=576,
-                				imageType="png",
-                				source="bing" if source_option=="bing" else "googlesat",
-                				API_Key=bing_api_key if source_option=="bing" else google_api_key)
-            			imagefetcher.fetchImage()
-            			_,im=imagefetcher.cropImage(32)
-            			new_im.paste(im,(xoffset,yoffset))
-            			maskfetcher=ImageFetcher(
-                				latitude=centerGPS.y,
-                				longitude=centerGPS.x,
-                				length=576,
-                				imageType="png",
-                				source="googleroad",
-				                API_Key=google_api_key)
-            			maskfetcher.fetchImage()
-            			_,im=maskfetcher.cropImage(32)
-            			new_im_mask.paste(im,(xoffset,yoffset))
+		for xoffset in range(0,4096,512):
+			for yoffset in range(0,4096,512):
+				centerWorld = tiles.reg.centerWorld + (Point(tiles.x*4096.0 + xoffset , -1 * (tiles.y * 4096.0 + yoffset)) * width)
+				centerGPS = MetersToLonLat(centerWorld)
+				imagefetcher=ImageFetcher(
+					latitude=centerGPS.y,
+					longitude=centerGPS.x,
+					length=576,
+					imageType="png",
+					source="bing" if source_option=="bing" else "googlesat",
+					API_Key=bing_api_key if source_option=="bing" else google_api_key
+				)
+				imagefetcher.fetchImage()
+				_,im=imagefetcher.cropImage(32)
+				new_im.paste(im,(xoffset,yoffset))
+				maskfetcher=ImageFetcher(
+						latitude=centerGPS.y,
+						longitude=centerGPS.x,
+						length=576,
+						imageType="png",
+						source="googleroad",
+						API_Key=google_api_key)
+				maskfetcher.fetchImage()
+				_,im=maskfetcher.cropImage(32)
+				new_im_mask.paste(im,(xoffset,yoffset))
 		new_im.save(os.path.join(image_path,tiles.fname))
-		new_im_mask.save(os.path.join(image_path,"mask_"+str(tiles.fname))
+		new_im_mask.save(os.path.join(image_path,"mask_"+str(tiles.fname)))
