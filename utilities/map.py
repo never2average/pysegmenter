@@ -124,7 +124,7 @@ class ImageFetcher:
                 self.pprint("Image Fetched Successfully")
             else:
                 self.pprint("Image Fetching Failed")
-            return self.image.status_cofetchedde
+            return self.image.status_code
 
     def saveImage(self, dir, filename):
         if not self.validationError:
