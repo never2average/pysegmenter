@@ -1,10 +1,13 @@
-from pysegmenter import getimage
+import pysegmenter
+import os
 
-getimage(
+
+pysegmenter.generateDataset(
 	regionName="Bangalore,Karnataka ,India",
 	format="png",
-	bing_api_key="ENter BING API KEY here",
-	google_api_key="Enter GOOGLE API KEY here",
-	source_option="bing", #enter bing or google
-	debug = True
+	bing_api_key="BING_API_KEY",
+	google_api_key="GOOGLE_API_KEY",
+	source_option="bing",
+	debug=True,
+	path=os.path.join(os.getcwd(), "data", "images")
 )

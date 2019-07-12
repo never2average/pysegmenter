@@ -5,8 +5,7 @@ import os
 import math
 
 
-def getimage(regionName, bing_api_key,google_api_key,source_option="bing", format = "png", path = None,debug = False):
-
+def generateDataset(regionName, bing_api_key, google_api_key, source_option="bing", format="png", path=None, debug=False):
 	if format not in ["jpeg","png"]:
 		print("Unknown format provided!! please enter either png or jpeg")
 		return
