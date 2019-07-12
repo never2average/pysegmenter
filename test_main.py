@@ -1,4 +1,4 @@
-from main import getimage
+from pysegmenter import getimage
 
 getimage(
 	regionName="Bangalore,Karnataka ,India",
