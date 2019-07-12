@@ -2,7 +2,6 @@ from utilities.map import ImageFetcher
 from utilities.utils import *
 from PIL import Image
 import os
-import re
 import math
 
 
