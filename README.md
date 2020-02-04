@@ -5,5 +5,8 @@ A library to generate satellite image with corresponding land-use image(google r
 ## Ubuntu
 
 ```
-sudo apt update && sudo apt install -y nodejs && sudo apt install -y npm && nodejs -v
+sudo apt update
+sudo apt install -y nodejs
+sudo apt install -y npm
+nodejs -v
 ```
